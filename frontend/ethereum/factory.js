@@ -3,7 +3,7 @@ import CharitableCauseFactory from "./contracts/CharitableCauseFactory.json";
 
 const instance = new web3.eth.Contract(
   CharitableCauseFactory.abi,
-  "0x727d88005684C92FED6013BbE20bee25E144a1a8"
+  "0xb71Cd56e8978c05a26bBFa688204AAeF6f2A202C"
 );
 
 export default instance;

@@ -1,13 +1,15 @@
 pragma solidity >=0.5.0 <0.7.0;
 
-//test comment
 contract CharitableCauseFactory {
     CharitableCause[] public deployedCharitableCauses;
 
-    function createCharitableCause(uint256 minimum) public {
+    function createCharitableCause(uint256 minimum, string memory details, string memory location, string memory causeType) public {
         CharitableCause newCharitableCause = new CharitableCause(
             minimum,
-            msg.sender
+            msg.sender,
+            details,
+            location,
+            causeType
         );
         deployedCharitableCauses.push(newCharitableCause);
     }
@@ -31,15 +33,22 @@ contract CharitableCause {
         mapping(address => bool) approvals;
     }
 
+    string public details;
+    string public location;
+    string public causeType;
     address public manager;
     uint256 public minimumContribution;
     mapping(address => bool) public approvers;
     uint256 public approversCount;
     Request[] public requests;
 
-    constructor(uint256 minimum, address creator) public {
+
+    constructor(uint256 minimum, address creator, string memory des, string memory loctn, string memory cause) public {
         manager = creator;
         minimumContribution = minimum;
+        location = loctn;
+        causeType = cause;
+        details = des;
     }
 
     function contribute() public payable {
@@ -101,7 +110,9 @@ contract CharitableCause {
             uint256,
             uint256,
             uint256,
-            address
+            address,
+            string memory,
+            string memory
         )
     {
         return (
@@ -109,7 +120,9 @@ contract CharitableCause {
             address(this).balance,
             requests.length,
             approversCount,
-            manager
+            manager,
+            location,
+            causeType
         );
     }
 

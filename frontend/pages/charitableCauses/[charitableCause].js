@@ -18,6 +18,8 @@ class CharitableCauseShow extends Component {
       requestsCount: summary[2],
       approversCount: summary[3],
       manager: summary[4],
+      location: summary[5],
+      causeType: summary[6]
     };
   }
 
@@ -28,6 +30,8 @@ class CharitableCauseShow extends Component {
       minimumContribution,
       requestsCount,
       approversCount,
+      location,
+      causeType
     } = this.props;
 
     const items = [
@@ -43,6 +47,16 @@ class CharitableCauseShow extends Component {
         meta: "Minimum Contribution (wei)",
         description:
           "You must contribute at least this much wei to become an approver",
+      },
+      {
+        header: "Location",
+        meta: "Help here!",
+        description: location,
+      },
+      {
+        header: "Cause Type",
+        meta: "Our organisations is concerned with: ",
+        description: causeType,
       },
       {
         header: requestsCount,
