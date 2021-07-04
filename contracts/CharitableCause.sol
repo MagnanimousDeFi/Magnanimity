@@ -1,5 +1,6 @@
 pragma solidity >=0.5.0 <0.7.0;
 
+//test comment
 contract CharitableCauseFactory {
     CharitableCause[] public deployedCharitableCauses;
 

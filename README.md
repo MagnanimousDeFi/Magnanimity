@@ -13,9 +13,9 @@ git clone https://github.com/MagnanimousDeFi/Magnanimity.git
 npm install -g truffle
 ```
 
-3. Install HDWalletProvider
+3. Install HDWalletProvider and Dotenv
 ```
-npm install --save @truffle/hdwallet-provider
+npm install --save dotenv @truffle/hdwallet-provider
 ```
 4. Create a copy of `.env.example` named `.env` and add your secret keys.
 5. Run the following on the command line to compile the contracts. (This will compile the contract(s) and save the resulting JSON file(s) to `/frontend/ethereum/contracts`
