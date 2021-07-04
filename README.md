@@ -20,7 +20,7 @@ npm install --save truffle-hdwallet-provider
 4. Create a copy of `.env.example` named `.env` and add your secret keys.
 5. Run the following on the command line to compile the contracts. (This will compile the contract(s) and save the resulting JSON file(s) to `/frontend/ethereum/contracts`
 ```
-truffle compile
+truffle compile -all
 ```
 
 6. To deploy the contract to Rinkeby run `truffle deploy --network rinkeby`
