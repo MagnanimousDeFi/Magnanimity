@@ -22,9 +22,8 @@ npm install --save truffle-hdwallet-provider
 ```
 truffle compile
 ```
-The contracts will be compiled and the resulting JSON file will be saved to `/frontend/ethereum/contracts`
 
-6. To deploy the contract to Rinkeby run `truffle deplpoy --network rinkeby`
+6. To deploy the contract to Rinkeby run `truffle deploy --network rinkeby`
 7. Navigate to the frontend folder and start the next server with the following commands.
 ```
 cd frontend
