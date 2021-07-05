@@ -10,7 +10,9 @@ class CharitableCauseShow extends Component {
   static async getInitialProps(context) {
     const charitableCause = CharitableCause(context.query.charitableCause);
     const summary = await charitableCause.methods.getSummary().call();
-    const withdrawalCount = await charitableCause.methods.getWithdrawalCount().call();
+    const withdrawalCount = await charitableCause.methods
+      .getWithdrawalCount()
+      .call();
     return {
       address: context.query.charitableCause,
       minimumContribution: summary[0],
@@ -22,12 +24,13 @@ class CharitableCauseShow extends Component {
       details: summary[6],
       location: summary[7],
       causeType: summary[8],
-      withdrawalCount
+      withdrawalCount,
     };
   }
 
   renderCards() {
     const {
+      address,
       balance,
       manager,
       minimumContribution,
@@ -38,7 +41,7 @@ class CharitableCauseShow extends Component {
       location,
       causeType,
       withdrawalCount,
-      withdrawals
+      withdrawals,
     } = this.props;
 
     const items = [
@@ -74,9 +77,10 @@ class CharitableCauseShow extends Component {
       },
       {
         header: web3.utils.fromWei(balance, "ether"),
-        meta: "CharitableCause Balance (ether)",
+        meta: `CharitableCause Balance (ether)`,
         description:
           "The balance is how much money this charitableCause has left to spend.",
+        style: { overflowWrap: "break-word" },
       },
       {
         header: withdrawalCount,
@@ -92,7 +96,15 @@ class CharitableCauseShow extends Component {
   render() {
     return (
       <Layout>
-        <h3>CharitableCause Show</h3>
+        <h3>CharitableCause Details</h3>
+        <h4>
+          Contract Address:
+          <Link
+            href={`https://rinkeby.etherscan.io/address/${this.props.address}`}
+          >
+            <a target="_blank">{this.props.address}</a>
+          </Link>
+        </h4>
         <Grid>
           <Grid.Row>
             <Grid.Column width={12}>{this.renderCards()}</Grid.Column>
