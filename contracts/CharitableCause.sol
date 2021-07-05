@@ -3,10 +3,11 @@ pragma solidity >=0.5.0 <0.7.0;
 contract CharitableCauseFactory {
     CharitableCause[] public deployedCharitableCauses;
 
-    function createCharitableCause(uint256 minimum, string memory details, string memory location, string memory causeType) public {
+    function createCharitableCause(uint256 minimum, string memory title, string memory details, string memory location, string memory causeType) public {
         CharitableCause newCharitableCause = new CharitableCause(
             minimum,
             msg.sender,
+            title,
             details,
             location,
             causeType
@@ -24,6 +25,19 @@ contract CharitableCauseFactory {
 }
 
 contract CharitableCause {
+
+    string public title;
+    string public details;
+    string public location;
+    string public causeType;
+    address public manager;
+    uint256 public minimumContribution;
+    mapping(address => bool) public approvers;
+    uint256 public approversCount;
+    Request[] public requests;
+    Withdrawal[] public withdrawals;
+
+
     struct Request {
         string description;
         uint256 value;
@@ -33,19 +47,17 @@ contract CharitableCause {
         mapping(address => bool) approvals;
     }
 
-    string public details;
-    string public location;
-    string public causeType;
-    address public manager;
-    uint256 public minimumContribution;
-    mapping(address => bool) public approvers;
-    uint256 public approversCount;
-    Request[] public requests;
+    struct Withdrawal {
+        string description;
+        uint256 amount;
+        address payable recieverAcc;
+        uint256 timestamp;
+    }
 
-
-    constructor(uint256 minimum, address creator, string memory des, string memory loctn, string memory cause) public {
+    constructor(uint256 minimum, address creator, string memory ttl, string memory des, string memory loctn, string memory cause) public {
         manager = creator;
         minimumContribution = minimum;
+        title = ttl;
         location = loctn;
         causeType = cause;
         details = des;
@@ -60,11 +72,7 @@ contract CharitableCause {
         approversCount++;
     }
 
-    function createRequest(
-        string memory description,
-        uint256 value,
-        address payable recipient
-    ) public onlyManager {
+    function createRequest(string memory description, uint256 value, address payable recipient) public onlyManager {
         Request memory newRequest = Request({
             description: description,
             value: value,
@@ -112,6 +120,8 @@ contract CharitableCause {
             uint256,
             address,
             string memory,
+            string memory,
+            string memory,
             string memory
         )
     {
@@ -121,6 +131,8 @@ contract CharitableCause {
             requests.length,
             approversCount,
             manager,
+            title,
+            details,
             location,
             causeType
         );
@@ -128,6 +140,25 @@ contract CharitableCause {
 
     function getRequestsCount() public view returns (uint256) {
         return requests.length;
+    }
+
+    function makeWithdrawal(uint256 amt, address payable recieverAcc, string memory description) public onlyManager {
+        recieverAcc.transfer(amt);
+        Withdrawal memory withdrawal =  Withdrawal({
+            description: description,
+            amount: amt,
+            timestamp: now,
+            recieverAcc: recieverAcc
+        });
+        withdrawals.push(withdrawal);
+    }
+
+     function getWithdrawalCount()
+        public
+        view
+        returns (uint256)
+    {
+        return withdrawals.length;
     }
 
     modifier onlyManager() {
