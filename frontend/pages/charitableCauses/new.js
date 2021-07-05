@@ -11,6 +11,7 @@ class CharitableCauseNew extends Component {
     minimumContribution: "",
     errorMessage: "",
     loading: false,
+    title: "",
     details: "",
     location: "",
     causetype: ""
@@ -31,7 +32,7 @@ class CharitableCauseNew extends Component {
     try {
       const accounts = await web3.eth.getAccounts();
       await factory.methods
-        .createCharitableCause(this.state.minimumContribution, this.state.details, this.state.location, this.state.causeType)
+        .createCharitableCause(this.state.minimumContribution, this.state.title, this.state.details, this.state.location, this.state.causeType)
         .send({
           from: accounts[0],
         });
@@ -59,6 +60,18 @@ class CharitableCauseNew extends Component {
               value={this.state.minimumContribution}
               onChange={(event) =>
                 this.setState({ minimumContribution: event.target.value })
+              }
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Title</label>
+
+            <Input
+              label="Enter Organisation Name"
+              labelPosition="right"
+              value={this.state.title}
+              onChange={(event) =>
+                this.setState({ title: event.target.value })
               }
             />
           </Form.Field>

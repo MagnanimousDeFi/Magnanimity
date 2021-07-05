@@ -4,23 +4,32 @@ import Link from "next/link";
 import factory from "../ethereum/factory";
 import Layout from "../components/Layout";
 import countryList from "../components/Categories";
+import CharitableCause from "../ethereum/charitableCause"
 
 class CharitableCauseIndex extends Component {
   static async getInitialProps() {
     const charitableCauses = await factory.methods
       .getDeployedCharitableCauses()
       .call();
-    return { charitableCauses };
+    const contracts = charitableCauses.map((cause) => [cause, CharitableCause(cause)]);
+    const summaries = await Promise.all(charitableCauses.map((cause) => {
+      return CharitableCause(cause).methods.getSummary().call();
+    }));
+    return { charitableCauses, summaries };
   }
 
   renderCharitableCauses() {
-    const items = this.props.charitableCauses.map((charitableCause) => {
+    const items = this.props.summaries.map((summary, index) => {
+      const address = this.props.charitableCauses[index];
+      const title = summary[5];
+      const details = summary[6];
       return {
-        header: charitableCause,
-        description: (
+        header: title,
+        description: (details),
+        meta: (
           <Link
             href="/charitableCauses/[charitableCause]"
-            as={`/charitableCauses/${charitableCause}`}
+            as={`/charitableCauses/${address}`}
           >
             <a>View CharitableCause</a>
           </Link>

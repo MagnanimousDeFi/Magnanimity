@@ -10,7 +10,7 @@ class CharitableCauseShow extends Component {
   static async getInitialProps(context) {
     const charitableCause = CharitableCause(context.query.charitableCause);
     const summary = await charitableCause.methods.getSummary().call();
-
+    const withdrawalCount = await charitableCause.methods.getWithdrawalCount().call();
     return {
       address: context.query.charitableCause,
       minimumContribution: summary[0],
@@ -18,8 +18,11 @@ class CharitableCauseShow extends Component {
       requestsCount: summary[2],
       approversCount: summary[3],
       manager: summary[4],
-      location: summary[5],
-      causeType: summary[6]
+      title: summary[5],
+      details: summary[6],
+      location: summary[7],
+      causeType: summary[8],
+      withdrawalCount
     };
   }
 
@@ -30,16 +33,19 @@ class CharitableCauseShow extends Component {
       minimumContribution,
       requestsCount,
       approversCount,
+      title,
+      details,
       location,
-      causeType
+      causeType,
+      withdrawalCount,
+      withdrawals
     } = this.props;
 
     const items = [
       {
-        header: manager,
-        meta: "Address of Manager",
-        description:
-          "The manager created this charitableCause and can create requests to withdraw money",
+        header: title,
+        meta: "Address of Manager: " + manager,
+        description: details,
         style: { overflowWrap: "break-word" },
       },
       {
@@ -49,12 +55,10 @@ class CharitableCauseShow extends Component {
           "You must contribute at least this much wei to become an approver",
       },
       {
-        header: "Location",
-        meta: "Help here!",
+        meta: "Location",
         description: location,
       },
       {
-        header: "Cause Type",
         meta: "Our organisations is concerned with: ",
         description: causeType,
       },
@@ -62,13 +66,11 @@ class CharitableCauseShow extends Component {
         header: requestsCount,
         meta: "Number of Requests",
         description:
-          "A request tries to withdraw money from the contract. Requests must be approved by approvers",
+          "A request tries to withdraw money from the contract. Requests must be approved by donators",
       },
       {
         header: approversCount,
-        meta: "Number of Approvers",
-        description:
-          "Number of people who have already donated to this charitableCause",
+        meta: "Number of Donators",
       },
       {
         header: web3.utils.fromWei(balance, "ether"),
@@ -76,9 +78,15 @@ class CharitableCauseShow extends Component {
         description:
           "The balance is how much money this charitableCause has left to spend.",
       },
+      {
+        header: withdrawalCount,
+        meta: "withdrawals made",
+        description:
+          "Organisations can immediately withdraw money from their contract if they are marked as an emergency cause.",
+      },
     ];
 
-    return <Card.Group items={items} />;
+    return <Card.Group fluid items={items} />;
   }
 
   render() {
@@ -87,14 +95,14 @@ class CharitableCauseShow extends Component {
         <h3>CharitableCause Show</h3>
         <Grid>
           <Grid.Row>
-            <Grid.Column width={10}>{this.renderCards()}</Grid.Column>
+            <Grid.Column width={12}>{this.renderCards()}</Grid.Column>
 
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
               <ContributeForm address={this.props.address} />
             </Grid.Column>
           </Grid.Row>
 
-          <Grid.Row>
+          <Grid.Row columns={2}>
             <Grid.Column>
               <Link
                 href="/charitableCauses/[charitableCause]/requests"
@@ -102,6 +110,16 @@ class CharitableCauseShow extends Component {
               >
                 <a>
                   <Button primary>View Requests</Button>
+                </a>
+              </Link>
+            </Grid.Column>
+            <Grid.Column>
+              <Link
+                href="/charitableCauses/[charitableCause]/withdrawals"
+                as={`/charitableCauses/${this.props.address}/withdrawals`}
+              >
+                <a>
+                  <Button primary>View Withdrawals</Button>
                 </a>
               </Link>
             </Grid.Column>
